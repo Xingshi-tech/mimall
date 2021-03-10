@@ -5,26 +5,28 @@
 </template>
 
 <script>
-// import jsonp from 'jsonp'
+// import storage from './storage/index'
+
 export default {
   name: 'app',
   components: {
-    
+
   },
-  data(){
+  data() {
     return {
-      
     }
   },
-  mounted(){
-    
+  mounted() {
+    // storage.setItem('a', { b: 1 })
+    // storage.setItem('detail', { 'username': '程良飞' }, 'b')
+    // storage.clear('username', 'detail')
   }
 }
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
