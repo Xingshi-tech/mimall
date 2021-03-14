@@ -28,6 +28,7 @@ export default {
     clear(key, module_name) {//清除某一项值
         let val = this.getStorage();
         if (module_name) {
+            if(!val[module_name])return;//如果内容不存在，直接返回
             delete val[module_name][key];
         } else {
             delete val[key];
