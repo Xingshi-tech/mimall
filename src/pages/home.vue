@@ -12,7 +12,7 @@ export default {
   name: 'nav-home',
   components: {//components 加载多个主件
     NavHeader,
-    NavFooter
+    NavFooter,
   }
 }
 </script>
