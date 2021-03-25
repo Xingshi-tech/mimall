@@ -10,7 +10,7 @@
                 <ul v-for="(item,i) in menuList" v-bind:key="i">
                   <li v-for="(sub,j) in item" v-bind:key="j">
                     <a v-bind:href="sub?'/#/product/'+sub.id:''">
-                      <img v-lazy="sub?sub.img:'/imgs/item-box-1.png'">
+                      <img v-bind:src="sub?sub.img:'/imgs/item-box-1.png'">
                       <span>{{sub?sub.name:'小米9'}}</span>
                     </a>
                   </li>
@@ -57,53 +57,40 @@
       </div>
       <div class="ads-box">
         <a class="ads-imgs" :href="'/#/product/'+item.id" v-for="(item,index) in adsList" :key="index">
-          <img v-lazy="item.img">
+          <img :src="item.img">
         </a>
       </div>
       <div class="banner">
-        <a href="/#/product/30">
-          <img v-lazy="'/imgs/banner-1.png'" alt="">
-        </a>
+        <a href="/#/product/30"></a>
       </div>
-    </div>
-    <div class="product-box">
-      <div class="container">
+      <div class="product-box">
         <h2>手机</h2>
         <div class="wrapper">
           <div class="banner-left">
-            <a href="/#/product/35">
-              <img v-lazy="'/imgs/mix-alpha.jpg'" alt="">
+            <a href="/#/product/34">
+              <img src="/imgs/mix-alpha.jpg" alt="">
             </a>
           </div>
           <div class="list-box">
-            <div class="list" v-for="(arr,i) in phoneList" :key="i">
-              <div class="item" v-for="(sub,j) in arr" :key="j">
-                <span :class="{'new-pro':j%2==0}">新品</span>
-                <div class="item-img">
-                  <img v-lazy="sub.mainImage" alt="">
-                </div>
-                <div class="item-info">
-                  <h3>{{sub.name}}</h3>
-                  <p>{{sub.subtitle}}</p><!-- 一般用p标签来包裹描述信息 -->
-                  <p class="price" @click="addCart(sub.id)">{{sub.price}}元</p>
-                </div>
-              </div>
-            </div>
+            <ul>
+              <li v-for="(sub,j) in productList2" :key="j">
+                <a :href="'/#/product/'+sub.id">
+                  <div class="detail">{{sub.status==1?"新品":""}}</div>
+                  <img :src="sub.mainImage" alt="">
+                  <div class="name">{{sub.name}}</div>
+                  <div class="introduction">{{sub.subtitle}}</div>
+                  <div class="price">{{sub.price+"元"}}</div>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
     <service-bar></service-bar>
-    <modal title="提示" sureText="查看购物车" btnType="1" modalType="middle" v-bind:showModal="showModal" v-on:submit="goToCart" v-on:cancel="showModal=false">
-      <template v-slot:body>
-        <p>商品添加成功</p>
-      </template>
-    </modal>
   </div>
 </template>
 <script>
-//导入弹窗组件 
-import Modal from './../components/Modal'
 import ServiceBar from './../components/ServiceBar'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper' //用于轮播图
 import 'swiper/css/swiper.css'
@@ -112,10 +99,8 @@ export default {
   components: {
     Swiper,
     SwiperSlide,
-    ServiceBar,
-    Modal
+    ServiceBar
   },
-
   data() {
     return {
       swiperOption: {
@@ -195,40 +180,55 @@ export default {
           img: '/imgs/ads/ads-4.jpg'
         },
       ],
-      phoneList: [
-        [1, 1, 1, 1], [1, 1, 1, 1]
-      ],
-      showModal: false
+      productList2: []
+      // productList: [
+      //   [
+      //     {
+      //       id: 12,
+      //       detail: "新品",
+      //       img: '/imgs/detail/phone-1.jpg',
+      //       name: "小米9 64GB+128GB",
+      //       introduction: "骁龙855，索尼4800万超广角微距",
+      //       price: "2999元"
+      //     }, {
+      //       id: 12,
+      //       detail: "秒杀",
+      //       img: '/imgs/detail/phone-1.jpg',
+      //       name: "小米9 64GB+128GB",
+      //       introduction: "骁龙855，索尼4800万超广角微距",
+      //       price: "2999元"
+      //     }, {
+      //       id: 12,
+      //       detail: "",
+      //       img: '/imgs/detail/phone-1.jpg',
+      //       name: "小米9 64GB+128GB",
+      //       introduction: "骁龙855，索尼4800万超广角微距",
+      //       price: "2999元"
+      //     }, {
+      //       id: 12,
+      //       detail: "新品",
+      //       img: '/imgs/detail/phone-1.jpg',
+      //       name: "小米9 64GB+128GB",
+      //       introduction: "骁龙855，索尼4800万超广角微距",
+      //       price: "2999元"
+      //     }
+      //   ], [0, 0, 0, 0]
+      // ]
     }
   },
-  mounted() {//初始化商品
-    this.init();//初始化
+  mounted() {//调用方法
+    this.getProductList2();
   },
   methods: {
-    init() {
+    getProductList2() {
       this.axios.get('/products', {
         params: {
-          categoryId: 100012,
+          categoryId: '100012',
           pageSize: 14
         }
       }).then((res) => {
-        res.list = res.list.slice(6, 14)
-        this.phoneList = [res.list.slice(0, 4), res.list.slice(4, 8)]
+        this.productList2 = res.list;
       })
-    },
-    addCart() {
-      this.showModal = true;
-      // this.axios.post('/carts', {
-      //   productId: id,
-      //   selected: true
-      // }).then(() => {
-
-      // }).catch(() => {
-      //   this.showModal = false;
-      // })
-    },
-    goToCart() {
-      this.$router.push('/cart');
     }
   }
 }
@@ -333,89 +333,64 @@ export default {
     .banner {
       margin-bottom: 50px;
       a {
-        width: 1226px;
-        height: 130px;
+        @include bgImg(1226px, 130px, "/imgs/banner-1.png");
       }
     }
-  }
-  .product-box {
-    background-color: $colorJ;
-    padding: 30px 0 50px;
-    h2 {
-      font-size: $fontF;
-      height: 21px;
-      line-height: 21px;
-      color: $colorB;
-    }
-    .wrapper {
-      margin-top: 20px;
-      display: flex;
-      .banner-left {
-        margin-right: 16px;
-        img {
+    .product-box {
+      background-color: $colorJ;
+      height: 740px;
+      padding-top: 30px;
+      .wrapper {
+        width: 100%;
+        margin-top: 20px;
+        height: 619px;
+        display: inline-block;
+        .banner-left {
+          float: left;
           width: 224px;
-          height: 619px;
-        }
-      }
-      .list-box {
-        .list {
-          @include flex();
-          width: 986px;
-          margin-bottom: 14px;
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
-        .item {
-          width: 236px;
-          height: 302px;
-          background-color: $colorG;
-          text-align: center;
-          span {
-            display: inline-block;
-            width: 67px;
-            height: 24px;
-            font-size: 14px;
-            line-height: 24px;
-            color: $colorG;
-            &.new-pro {
-              //新品颜色
-              background-color: #7ecf68;
-            }
-            &.kill-pro {
-              //秒杀
-              background-color: #e82626;
-            }
-          }
-          .item-img {
+          margin-right: 16px;
+          a {
             img {
-              width: 100%;
-              height: 195px;
+              width: 224px;
+              height: 619px;
             }
           }
-          .item-info {
-            h3 {
-              font-size: $fontJ;
-              color: $colorB;
-              line-height: $fontJ;
-              font-weight: bold;
-            }
-            p {
-              color: $colorD;
-              line-height: 13px;
-              margin: 6px auto 13px;
-            }
-            .price {
-              color: #f20a0a;
-              font-size: $fontJ;
-              font-weight: bold;
-              cursor: pointer;
-              &::after {
-                //用于添加购物车
-                content: " ";
-                @include bgImg(22px, 22px, "/imgs/icon-cart-hover.png");
-                margin-left: 5px;
-                vertical-align: middle;
+        }
+        .list-box {
+          ul {
+            width: 986px;
+            display: flex;
+            justify-content: space-between;
+            height: 302px;
+            margin-bottom: 14px;
+            li {
+              width: 236px;
+              background-color: $colorG;
+              text-align: center;
+              font-size: 14px;
+              align-items: center;
+              .detail {
+                color: #ffffff;
+                width: 67px;
+                height: 24px;
+                background-color: #7ecf68;
+                margin-left: 84px;
+              }
+              img {
+                width: 190px;
+                height: 195px;
+              }
+              .name {
+                color: #333333;
+              }
+              .introduction {
+                font-size: 12px;
+                margin-top: 6px;
+                color: #999999;
+              }
+              .price {
+                margin-top: 13px;
+                color: #f20a0a;
               }
             }
           }

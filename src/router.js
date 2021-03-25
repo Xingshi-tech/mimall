@@ -10,6 +10,7 @@ import OrderConfirm from './pages/orderConfirm'
 import OrderList from './pages/orderList'
 import OrderPay from './pages/orderPay'
 import Alipay from './pages/alipay'
+import Login from './pages/login'
 
 // Vue.use()加载插件的固定语法
 Vue.use(Router);//加载Router插件
@@ -39,6 +40,11 @@ export default new Router({
                     component: Detail
                 }
             ]
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: Login
         },
         {
             path: '/cart',

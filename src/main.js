@@ -5,6 +5,8 @@ import axios from 'axios'
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
 import router from './router'//引入router
+import VueLazyLoad from 'vue-lazyload'
+import VueCookie from 'vue-cookie'
 
 //mock开关
 const mock = true;
@@ -30,9 +32,13 @@ axios.interceptors.response.use(function (response) {//处理返回值
     window.location.href = '/#/login';//带井号的是哈希路由，如果未登录，跳转到登录页面
   } else {//其它错误信息
     alert(res.msg);
+    return Promise.reject(res);
   }
 })
-
+Vue.use(VueCookie)
+Vue.use(VueLazyLoad,{
+  loading:'/imgs/loading-svg/loading-bars.svg'//加载动画
+})
 Vue.prototype.axios = axios;
 Vue.config.productionTip = false//生产环境的提示，默认为false
 
