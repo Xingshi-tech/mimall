@@ -18,6 +18,21 @@ export default {
     }
   },
   mounted() {
+    this.getUser();
+    this.getCartCount();
+  },
+  methods: {
+    getUser() {// 获取用户信息
+      this.axios.get('/user').then((res) => {
+        //to-do保存到vuex里去
+        this.$store.dispatch('saveUserName', res.username);
+      })
+    },
+    getCartCount() {//获取购物车数量
+      this.axios.get('/carts/products/sum').then((res) => {
+        this.$store.dispatch('saveCartCount', res);
+      })
+    }
   }
 }
 </script>

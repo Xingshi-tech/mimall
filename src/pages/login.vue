@@ -53,9 +53,9 @@ export default {
         username,//传参
         password
       }).then((res) => {
-        this.$cookie.set('userId', res.id, { expires: '1M' })//存储到cookie,expires:'1M'(过期时间：一个月)
-        //to-do 保存用户名、用户信息
-        console.log(res)
+        this.$cookie.set('userId', res.id, { expires: '1M' });//存储到cookie,expires:'1M'(过期时间：一个月)
+        //保存用户名、用户信息,
+        this.$store.dispatch('saveUserName', res.username);//第二个参数指的是传的参数
         this.$router.push('/index');//进行跳转，跳转到首页
       })
     },
